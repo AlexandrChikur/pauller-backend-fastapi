@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+isort app
+autoflake --recursive --remove-all-unused-imports --remove-unused-variables --in-place app
+black app
+

@@ -1,0 +1,9 @@
+[flake8]
+ignore =
+    E501,
+exclude =
+    .git,
+    .vscode,
+    __pycache__,
+    app/db/queries,
+    app/resources/strings.py
