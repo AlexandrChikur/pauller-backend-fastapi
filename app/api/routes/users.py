@@ -2,14 +2,15 @@ from fastapi import APIRouter, Body, Depends, Query
 from fastapi.exceptions import HTTPException
 from starlette import status
 
-from app.api.dependencies.auth import get_current_user
+from app.api.dependencies.auth import get_current_user_authorizer
 from app.api.dependencies.database import get_repository
 from app.core import config
 from app.db.errors.users import EntityDoesNotExistError, WrongLoginError
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import (UserInCreate, UserInDB, UserInLogin,
-                                      UserInResponse, UserInUpdate,
-                                      UserWithStates, UserWithToken)
+from app.models.schemas.users import (User, UserInCreate, UserInDB,
+                                      UserInLogin, UserInResponse,
+                                      UserInUpdate, UserWithStates,
+                                      UserWithToken)
 from app.resources import strings
 from app.services import jwt
 from app.services.auth import check_email_is_taken, check_username_is_taken
@@ -97,7 +98,7 @@ async def login_user(
     name="users:update-current-user",
 )
 async def update_user(
-    current_user: UserInDB = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_authorizer()),
     user_update: UserInUpdate = Body(..., embed=True, alias="user"),
     users_repo: UsersRepository = Depends(get_repository(UsersRepository)),
 ) -> UserInResponse:
