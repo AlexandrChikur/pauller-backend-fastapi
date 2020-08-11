@@ -2,13 +2,8 @@ from fastapi import FastAPI
 
 from app.api.metadata import TAGS_METADATA
 from app.api.routes.api import router as api_router
-from app.core.config import (
-    API_PREFIX,
-    DEBUG,
-    PROJECT_DESCRIPTION,
-    PROJECT_NAME,
-    VERSION,
-)
+from app.core.config import (API_PREFIX, DEBUG, PROJECT_DESCRIPTION,
+                             PROJECT_NAME, VERSION)
 from app.core.events import create_start_app_handler, create_stop_app_handler
 
 

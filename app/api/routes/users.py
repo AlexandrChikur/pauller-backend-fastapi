@@ -8,16 +8,10 @@ from app.core import config
 from app.db.errors.common import EntityDoesNotExistError
 from app.db.errors.users import WrongLoginError
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import (
-    User,
-    UserInCreate,
-    UserInDB,
-    UserInLogin,
-    UserInResponse,
-    UserInUpdate,
-    UserWithStates,
-    UserWithToken,
-)
+from app.models.schemas.users import (User, UserInCreate, UserInDB,
+                                      UserInLogin, UserInResponse,
+                                      UserInUpdate, UserWithStates,
+                                      UserWithToken)
 from app.resources import strings
 from app.services import jwt
 from app.services.auth import check_email_is_taken, check_username_is_taken
