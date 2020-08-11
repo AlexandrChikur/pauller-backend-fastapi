@@ -1,8 +1,12 @@
 from typing import Optional
 
-from app.db.errors.users import EntityDoesNotExistError
-from app.db.queries.users import (CREATE_USER_QUERY, GET_USER_BY_EMAIL,
-                                  GET_USER_BY_USERNAME, UPDATE_USER)
+from app.db.errors.common import EntityDoesNotExistError
+from app.db.queries.users import (
+    CREATE_USER_QUERY,
+    GET_USER_BY_EMAIL,
+    GET_USER_BY_USERNAME,
+    UPDATE_USER,
+)
 from app.db.repositories.base import BaseRepository
 from app.models.schemas.users import UserInDB
 
@@ -11,7 +15,7 @@ class UsersRepository(BaseRepository):
     async def create_user(
         self, *, username: str, email: str, password: str,
     ) -> UserInDB:
-        user = UserInDB(username=username, email=email, password=password)
+        user = UserInDB(username=username, email=email, password=password, is_active=True)
         user.change_password(password)
         await self._conn.execute(
             CREATE_USER_QUERY,

@@ -5,4 +5,5 @@ TAGS_METADATA: List[dict] = [
         "name": "users",
         "description": "Operations with users. The **login&signup** logic is also here.",
     },
+    {"name": "polls", "description": "Operations with polls.",},
 ]

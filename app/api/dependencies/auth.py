@@ -6,9 +6,9 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.dependencies.database import get_repository
 from app.core.config import JWT_TOKEN_PREFIX, SECRET_KEY
-from app.db.errors.users import EntityDoesNotExistError
+from app.db.errors.common import EntityDoesNotExistError
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import User
+from app.models.schemas.users import UserInDB
 from app.resources import strings
 from app.services import jwt
 
@@ -65,7 +65,7 @@ def _get_authorization_header_optional(
 async def _get_current_user(
     users_repo: UsersRepository = Depends(get_repository(UsersRepository)),
     token: str = Depends(_get_authorization_header_retriever()),
-) -> User:
+) -> UserInDB:
     try:
         username = jwt.get_username_from_token(token, str(SECRET_KEY))
     except ValueError:
@@ -75,7 +75,7 @@ async def _get_current_user(
 
     try:
         return await users_repo.get_user_by_username(username=username)
-    except EntityDoesNotExist:
+    except EntityDoesNotExistError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=strings.MALFORMED_PAYLOAD,
         )
@@ -84,7 +84,7 @@ async def _get_current_user(
 async def _get_current_user_optional(
     repo: UsersRepository = Depends(get_repository(UsersRepository)),
     token: str = Depends(_get_authorization_header_retriever(required=False)),
-) -> Optional[User]:
+) -> Optional[UserInDB]:
     if token:
         return await _get_current_user(repo, token)
 

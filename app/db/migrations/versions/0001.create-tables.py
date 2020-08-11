@@ -1,5 +1,6 @@
 from yoyo import step
 
-from app.db.queries.tables import CREATE_USERS_TABLE_QUERY
+from app.db.queries.tables import CREATE_POLLS_TABLE_QUERY, CREATE_USERS_TABLE_QUERY
 
-steps = [step(CREATE_USERS_TABLE_QUERY, ignore_errors="apply")]
+step(CREATE_USERS_TABLE_QUERY, ignore_errors="apply")
+step(CREATE_POLLS_TABLE_QUERY, ignore_errors="apply")

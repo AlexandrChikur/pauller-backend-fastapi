@@ -3,6 +3,6 @@
 set -e
 
 isort app
-autoflake --recursive --remove-all-unused-imports --remove-unused-variables --in-place app
+autoflake -r --in-place --remove-unused-variables --remove-all-unused-imports .
 black app
 

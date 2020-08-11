@@ -1,16 +1,23 @@
-from fastapi import APIRouter, Body, Depends, Query
+from fastapi import APIRouter, Body, Depends
 from fastapi.exceptions import HTTPException
 from starlette import status
 
 from app.api.dependencies.auth import get_current_user_authorizer
 from app.api.dependencies.database import get_repository
 from app.core import config
-from app.db.errors.users import EntityDoesNotExistError, WrongLoginError
+from app.db.errors.common import EntityDoesNotExistError
+from app.db.errors.users import WrongLoginError
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import (User, UserInCreate, UserInDB,
-                                      UserInLogin, UserInResponse,
-                                      UserInUpdate, UserWithStates,
-                                      UserWithToken)
+from app.models.schemas.users import (
+    User,
+    UserInCreate,
+    UserInDB,
+    UserInLogin,
+    UserInResponse,
+    UserInUpdate,
+    UserWithStates,
+    UserWithToken,
+)
 from app.resources import strings
 from app.services import jwt
 from app.services.auth import check_email_is_taken, check_username_is_taken

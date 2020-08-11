@@ -1,4 +1,4 @@
-from app.db.errors.users import EntityDoesNotExistError
+from app.db.errors.common import EntityDoesNotExistError
 from app.db.repositories.users import UsersRepository
 
 

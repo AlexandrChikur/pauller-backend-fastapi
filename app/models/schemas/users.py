@@ -14,7 +14,7 @@ class User(BaseModel):
 
 
 class UserWithStates(User):
-    is_active: bool = True
+    is_active: bool = False
     is_super: bool = False
     is_staff: bool = False
 

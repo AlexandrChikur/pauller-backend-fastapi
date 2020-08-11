@@ -3,11 +3,11 @@ INSERT INTO users (username, email, hashed_password, bio, image, is_active, is_s
 """
 
 GET_USER_BY_USERNAME = """
-SELECT id, username, email, hashed_password, bio, image FROM users WHERE username=$1
+SELECT id, username, email, hashed_password, bio, image, is_active, is_super, is_staff FROM users WHERE username=$1
 """
 
 GET_USER_BY_EMAIL = """
-SELECT id, username, email, hashed_password, bio, image FROM users WHERE email=$1
+SELECT id, username, email, hashed_password, bio, image, is_active, is_super, is_staff FROM users WHERE email=$1
 """
 
 UPDATE_USER = """

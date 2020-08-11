@@ -188,6 +188,25 @@ test = ["pytest (5.4.3)", "pytest-cov (2.10.0)", "mypy (0.782)", "black (19.10b0
 
 [[package]]
 category = "main"
+description = "Opinionated set of utilities on top of FastAPI"
+name = "fastapi-contrib"
+optional = false
+python-versions = "*"
+version = "0.2.7"
+
+[package.dependencies]
+fastapi = ">=0.52.0"
+pydantic = ">=1.4"
+
+[package.extras]
+all = ["motor (>=2.0.0)", "ujson (<2.0.0)", "pytz", "jaeger-client (>=4.1.0)", "opentracing (>=2.2.0)"]
+jaegertracing = ["jaeger-client (>=4.1.0)", "opentracing (>=2.2.0)"]
+mongo = ["motor (>=2.0.0)"]
+pytz = ["pytz"]
+ujson = ["ujson (<2.0.0)"]
+
+[[package]]
+category = "main"
 description = "the modular source code checker: pep8 pyflakes and co"
 name = "flake8"
 optional = false
@@ -534,7 +553,7 @@ postgres = ["psycopg2"]
 pyodbc = ["pyodbc"]
 
 [metadata]
-content-hash = "da8b4cfed324c589e448314cf960be8769058974b73ac2e6ecffa82733c84b5b"
+content-hash = "21b0179564c54dd529026ceccb7148012ba53805c7bdc00d3f4e31fd387935ef"
 python-versions = "3.8.*"
 
 [metadata.files]
@@ -670,6 +689,10 @@ email-validator = [
 fastapi = [
     {file = "fastapi-0.59.0-py3-none-any.whl", hash = "sha256:50b58aa3e7d5bcb4a4404ac7e550cc53f0cf7ca0fd13c7fd515693dc23c9caef"},
     {file = "fastapi-0.59.0.tar.gz", hash = "sha256:c04dacd3deed0fd0ffdcdb116b5a04ffa257656885be7fae7234f4f62ec4a0a9"},
+]
+fastapi-contrib = [
+    {file = "fastapi_contrib-0.2.7-py2.py3-none-any.whl", hash = "sha256:ef7ffe350b5941839089c3febf236e639f5e6237152e9b41c79f58f0b5e2be6c"},
+    {file = "fastapi_contrib-0.2.7.tar.gz", hash = "sha256:13ababccbd071037cad1a5705323f423d8a91a748653d2ab2abd6b90a1f7da74"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},
