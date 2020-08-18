@@ -1,8 +1,12 @@
 from typing import Optional
 
 from app.db.errors.common import EntityDoesNotExistError
-from app.db.queries.users import (CREATE_USER_QUERY, GET_USER_BY_EMAIL,
-                                  GET_USER_BY_USERNAME, UPDATE_USER)
+from app.db.queries.users import (
+    CREATE_USER_QUERY,
+    GET_USER_BY_EMAIL,
+    GET_USER_BY_USERNAME,
+    UPDATE_USER,
+)
 from app.db.repositories.base import BaseRepository
 from app.models.schemas.users import UserInDB
 

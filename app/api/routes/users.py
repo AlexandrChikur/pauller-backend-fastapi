@@ -8,10 +8,16 @@ from app.core import config
 from app.db.errors.common import EntityDoesNotExistError
 from app.db.errors.users import WrongLoginError
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import (User, UserInCreate, UserInDB,
-                                      UserInLogin, UserInResponse,
-                                      UserInUpdate, UserWithStates,
-                                      UserWithToken)
+from app.models.schemas.users import (
+    User,
+    UserInCreate,
+    UserInDB,
+    UserInLogin,
+    UserInResponse,
+    UserInUpdate,
+    UserWithStates,
+    UserWithToken,
+)
 from app.resources import strings
 from app.services import jwt
 from app.services.auth import check_email_is_taken, check_username_is_taken
@@ -57,7 +63,7 @@ async def create_user(
 
 @router.post(
     "/login",
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     response_model=UserInResponse,
     summary="Log In User",
     name="users:login",

@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, HttpUrl, validator
+import pytz
+from pydantic import BaseModel, validator
 
 from app.models.common import IDModelMixin
 
@@ -22,6 +23,14 @@ class Poll(BaseModel):
 
         return v.lower()
 
+    def is_active(self):
+        return all(
+            [
+                self.start_at < pytz.UTC.localize(datetime.now()),
+                self.finish_at > pytz.UTC.localize(datetime.now()),
+            ]
+        )
+
 
 class PollInDB(Poll, IDModelMixin):
     author_id: int
@@ -29,6 +38,6 @@ class PollInDB(Poll, IDModelMixin):
 
 class PollInResponse(BaseModel):
     count: int
-    next: HttpUrl
-    prev: HttpUrl
+    next: Optional[str]
+    prev: Optional[str]
     results: List[PollInDB]

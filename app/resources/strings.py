@@ -8,5 +8,3 @@ WRONG_TOKEN_PREFIX = "unsupported authorization type"
 MALFORMED_PAYLOAD = "could not validate credentials"
 
 AUTHENTICATION_REQUIRED = "authentication required"
-
-PERMISSION_DENIED = "user don't have the permissions"
