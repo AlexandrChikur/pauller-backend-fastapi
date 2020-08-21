@@ -7,8 +7,7 @@ CREATE TABLE users(
     bio TEXT,
     image VARCHAR,
     is_active BOOL,
-    is_super BOOL,
-    is_staff BOOL)
+    is_admin BOOL)
 """
 
 CREATE_POLLS_TABLE_QUERY = """

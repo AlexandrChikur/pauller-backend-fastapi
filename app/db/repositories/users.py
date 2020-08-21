@@ -27,8 +27,7 @@ class UsersRepository(BaseRepository):
             user.bio,
             user.image,
             user.is_active,
-            user.is_super,
-            user.is_staff,
+            user.is_admin,
         )
 
         return user

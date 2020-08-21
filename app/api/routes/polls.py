@@ -1,10 +1,16 @@
-from fastapi import APIRouter, Body, Depends, Query, status
+from fastapi import APIRouter, Body, Depends, Query, Request, status
 
 from app.api.dependencies.auth import get_current_user_authorizer
 from app.api.dependencies.database import get_repository
+from app.api.errors.permissions import PermissionDeniedError
 from app.db.repositories.polls import PollsRepository
 from app.models.schemas.polls import Poll, PollInDB, PollInResponse
+from app.api.dependencies.permissions import (
+    get_active_permissionizer,
+    get_admin_permissionizer,
+)
 from app.models.schemas.users import UserInDB
+
 
 router = APIRouter()
 
@@ -15,8 +21,13 @@ router = APIRouter()
     response_model=PollInResponse,
     summary="Get Exists Polls",
     name="polls:get_polls",
+    dependencies=[
+        Depends(get_admin_permissionizer(required=False)),
+        Depends(get_active_permissionizer()),
+    ],
 )
 async def get_polls(
+    request: Request,
     current_user: UserInDB = Depends(get_current_user_authorizer()),
     poll_repo: PollsRepository = Depends(get_repository(PollsRepository)),
     limit: int = Query(
@@ -25,8 +36,17 @@ async def get_polls(
     offset: int = Query(
         None, title="offset", description="Poll number from which polls will be shown"
     ),
+    all: bool = Query(
+        False,
+        title="Get all polls function",
+        description="Turn it True to get all polls, **allowed only for admin**",
+    ),
 ) -> PollInResponse:
     """ Some description """
+    if all:
+        if request.app.state.admin_user_requested:
+            return await poll_repo.get_all_polls()
+        raise PermissionDeniedError(sub="user is not admin")
 
     return await poll_repo.get_polls(limit=limit, offset=offset)
 

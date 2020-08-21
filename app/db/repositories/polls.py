@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from app.db.queries.polls import CREATE_POLL, GET_POLLS, GET_POLLS_COUNT
+from app.db.queries.polls import CREATE_POLL, GET_ALL_POLLS, GET_POLLS, GET_POLLS_COUNT
 from app.db.repositories.base import BaseRepository
 from app.models.schemas.polls import PollInDB, PollInResponse
 
@@ -48,6 +48,16 @@ class PollsRepository(BaseRepository):
     async def get_count_of_polls(self) -> int:
         return (await self._conn.fetchrow(GET_POLLS_COUNT))["count"]
 
+    async def get_all_polls(self) -> PollInResponse:
+        polls = await self._conn.fetch(GET_ALL_POLLS)
+
+        return PollInResponse(
+            count=len(polls),
+            next="not implemented yet",
+            prev="not implemented yet",
+            results=[PollInDB(**poll) for poll in polls],
+        )
+
     async def get_polls(
         self, *, limit: Optional[int] = None, offset: Optional[int] = None,
     ) -> PollInResponse:
@@ -57,5 +67,7 @@ class PollsRepository(BaseRepository):
             count=len(polls),
             next="not implemented yet",
             prev="not implemented yet",
-            results=[PollInDB(**poll) for poll in polls],
+            results=[
+                PollInDB(**poll) for poll in polls if PollInDB(**poll).is_active()
+            ],
         )

@@ -7,6 +7,10 @@ GET_POLLS = """
 SELECT * FROM polls OFFSET $1 LIMIT $2
 """
 
+GET_ALL_POLLS = """
+SELECT * FROM polls
+"""
+
 GET_POLLS_COUNT = """
 SELECT COUNT(*) FROM polls
 """

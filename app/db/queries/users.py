@@ -1,13 +1,13 @@
 CREATE_USER_QUERY = """
-INSERT INTO users (username, email, hashed_password, bio, image, is_active, is_super, is_staff) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+INSERT INTO users (username, email, hashed_password, bio, image, is_active, is_admin) VALUES($1, $2, $3, $4, $5, $6, $7)
 """
 
 GET_USER_BY_USERNAME = """
-SELECT id, username, email, hashed_password, bio, image, is_active, is_super, is_staff FROM users WHERE username=$1
+SELECT id, username, email, hashed_password, bio, image, is_active, is_admin FROM users WHERE username=$1
 """
 
 GET_USER_BY_EMAIL = """
-SELECT id, username, email, hashed_password, bio, image, is_active, is_super, is_staff FROM users WHERE email=$1
+SELECT id, username, email, hashed_password, bio, image, is_active, is_admin FROM users WHERE email=$1
 """
 
 UPDATE_USER = """
