@@ -10,3 +10,5 @@ MALFORMED_PAYLOAD = "could not validate credentials"
 AUTHENTICATION_REQUIRED = "authentication required"
 
 PERMISSION_DENIED = "user do not have required permissions"
+
+POLL_DELETED = "the poll was successfully deleted"

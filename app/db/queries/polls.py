@@ -14,3 +14,7 @@ SELECT * FROM polls
 GET_POLLS_COUNT = """
 SELECT COUNT(*) FROM polls
 """
+
+DELETE_POLL_BY_ID = """
+DELETE FROM polls WHERE id=$1
+"""

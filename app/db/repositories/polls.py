@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from app.db.queries.polls import CREATE_POLL, GET_ALL_POLLS, GET_POLLS, GET_POLLS_COUNT
+from app.db.queries.polls import CREATE_POLL, GET_ALL_POLLS, GET_POLLS, GET_POLLS_COUNT, DELETE_POLL_BY_ID
 from app.db.repositories.base import BaseRepository
 from app.models.schemas.polls import PollInDB, PollInResponse
 
@@ -71,3 +71,6 @@ class PollsRepository(BaseRepository):
                 PollInDB(**poll) for poll in polls if PollInDB(**poll).is_active()
             ],
         )
+    
+    async def delete_poll(self, *, id: int) -> None:
+        await self._conn.execute(DELETE_POLL_BY_ID, id)
