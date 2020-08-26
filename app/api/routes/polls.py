@@ -26,11 +26,11 @@ router = APIRouter()
     dependencies=[
         Depends(get_admin_permissionizer(required=False)),
         Depends(get_active_permissionizer()),
+        Depends(get_current_user_authorizer())
     ],
 )
 async def get_polls(
     request: Request,
-    current_user: UserInDB = Depends(get_current_user_authorizer()),
     poll_repo: PollsRepository = Depends(get_repository(PollsRepository)),
     limit: int = Query(
         None, title="limit", description="Maximum amount of polls to be shown"
@@ -44,13 +44,22 @@ async def get_polls(
         description="Turn it True to get all polls, **allowed only for admin**",
     ),
 ) -> PollInResponse:
-    """ Some description """
+    """
+    Method for **get** the polls. <br/><br/>
+    Allowed for ```active``` user. To use the *all* parameter, the user must have ```administrator``` access. <br/><br/>
+    For the active user will be returned a list of ```active polls```. For admin allowed to get all polls include ```inactive```. <br/>
+
+    Query params (**all params aren't required**): <br/>
+    *::param::* limit: int - Maximum amount of polls to be shown. <br/>
+    *::param::* offset: int - Poll number from which polls will be shown. <br/>
+    *::param::* all: bool - Turn it True to get all polls, **allowed only for admin**. <br/>
+    """
     if all:
         if request.app.state.admin_user_requested:
             return await poll_repo.get_all_polls()
         raise PermissionDeniedError(sub="user is not admin")
 
-    return await poll_repo.get_polls(limit=limit, offset=offset)
+    return await poll_repo.get_polls(limit=limit, offset=offset, is_admin=request.app.state.admin_user_requested)
 
 
 @router.post(
@@ -59,7 +68,7 @@ async def get_polls(
     response_model=Poll,
     summary="Create the poll",
     name="polls:create_poll",
-    dependencies=[Depends(get_active_permissionizer())]
+    dependencies=[Depends(get_active_permissionizer())],
 )
 async def create_poll(
     poll_create: Poll = Body(..., embed=True, alias="poll"),
@@ -68,16 +77,16 @@ async def create_poll(
 ) -> Poll:
     """
     Method for **create** the poll. <br/><br/>
-    Allowed for ```authorized & active``` user.
+    Allowed for ```active``` user.
 
     Request Body params:<br/>
-        *::param::*           title: str -  The title of the poll (**required**)
-        *::param::*     description: str -  The description of the poll
-        *::param::* created_at: datetime -  The time when the poll is created (**required**)
-        *::param::*   start_at: datetime -  Time when you can start voting in the poll (**required**)
-        *::param::*  finish_at: datetime -  The time when the poll will be closed for voting (**required**)
-        *::param::*       poll_type: str -  Type of the poll. Can be one of "single", "text" or "multiple" (**required**)
-        *::param::*    anonymously: bool -  A parameter that makes the poll anonymous. Can be True or False. False by default
+    *::param::*           title: str -  The title of the poll. (**REQUIRED**) <br/>
+    *::param::*     description: str -  The description of the poll. <br/>
+    *::param::* created_at: datetime -  The time when the poll is created. (**REQUIRED**) <br/>
+    *::param::*   start_at: datetime -  Time when you can start voting in the poll. (**REQUIRED**) <br/>
+    *::param::*  finish_at: datetime -  The time when the poll will be closed for voting. (**REQUIRED**) <br/>
+    *::param::*       poll_type: str -  Type of the poll. Can be one of "single", "text" or "multiple". (**REQUIRED**) <br/>
+    *::param::*    anonymously: bool -  A parameter that makes the poll anonymous. Can be True or False. False by default. <br/>
     """
     poll_with_author_id = PollInDB(**poll_create.dict(), author_id=current_user.id)
 
@@ -89,27 +98,21 @@ async def create_poll(
     status_code=status.HTTP_200_OK,
     summary="Delete the poll",
     name="polls:delete_poll",
-    dependencies=[Depends(get_admin_permissionizer())],
-    tags=["admin methods only"]
+    dependencies=[Depends(get_admin_permissionizer()), Depends(get_current_user_authorizer())],
+    tags=["admin"],
 )
 async def delete_poll(
     id: int,
-    current_user: UserInDB = Depends(get_current_user_authorizer()),
-    poll_repo: PollsRepository = Depends(get_repository(PollsRepository))
+    poll_repo: PollsRepository = Depends(get_repository(PollsRepository)),
 ) -> JSONResponse:
     """
-    Method for **delete** the poll from db.<br/>
+    Method for **delete** the poll from db.<br/> <br/>
     Allowed for ```admin``` only.
 
+    *::param::* id: int  - id belonging to the poll to be deleted (**REQUIRED**)  <br/><br/>
 
-        *::param::* id: int  - id belonging to the poll to be deleted (**required**)
-
-
-    Returns a JSONResponse with static content: "the poll was successfully deleted" and status_code=200
+    Returns a JSONResponse with static content: "the poll was successfully deleted" and status code=200.
     """
     await poll_repo.delete_poll(id=id)
 
-    return JSONResponse(
-        content=strings.POLL_DELETED,
-        status_code=status.HTTP_200_OK
-    )
+    return JSONResponse(content=strings.POLL_DELETED, status_code=status.HTTP_200_OK)
